@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#101513" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23111613'/%3E%3Cpath d='M13 14h38v10H37v27H26V24H13z' fill='%23c6d15a'/%3E%3C/svg%3E" />
+  <title>TACTICAL FPS — Complexo Ferro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="renderCanvas" aria-label="Campo de jogo"></canvas>
+    <div class="film-grain"></div>
+    <div id="hud" class="hud hidden">
+      <header class="topline"><div class="brand-mark"><span class="brand-icon">V</span><span>OPERAÇÃO <b>VÉRTICE</b><small>COMPLEXO FERRO · SETOR 04</small></span></div><div class="round-info"><span id="mode-label">TREINAMENTO</span><strong id="clock">04:00</strong><span class="round-score"><i>AZUL</i> <b id="blue-score">0</b> <em>:</em> <b id="red-score">0</b> <i>HOSTIL</i></span></div><div class="objective"><span class="live-dot"></span> OBJETIVO <b id="objective-text">NEUTRALIZAR ALVOS</b></div></header>
+      <section class="radar-panel"><div class="radar-title"><span>▣ RADAR TÁTICO</span><b>FERRO / 04</b></div><canvas id="radar" width="180" height="180"></canvas><div class="radar-foot"><span>● ALIADO</span><span>▲ HOSTIL</span></div></section>
+      <div id="hit-marker" class="hit-marker">×</div><div id="crosshair" class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+      <div class="mission-toast" id="toast"><span>TRANSMISSÃO RECEBIDA</span><b id="toast-text">Área segura. Avance.</b></div>
+      <aside class="killfeed" id="killfeed"></aside>
+      <section class="bottom-left"><div class="status-row"><span class="status-icon">＋</span><div><small>SAÚDE</small><b id="health-value">100</b></div><div class="meter"><i id="health-bar"></i></div></div><div class="status-row armor-row"><span class="status-icon">⬟</span><div><small>COLETE</small><b id="armor-value">100</b></div><div class="meter"><i id="armor-bar"></i></div></div><div class="cash-line">SALDO DE OPERAÇÃO <b id="cash-value">$ 800</b></div></section>
+      <section class="bottom-center"><div class="stance-icon" id="stance-icon">⌖</div><div class="key-hint">WASD <span>MOVIMENTO</span></div><div class="key-hint">SHIFT <span>CORRER</span></div><div class="key-hint">CTRL <span>AGACHAR</span></div></section>
+      <section class="bottom-right"><div class="weapon-label"><span id="weapon-class">FUZIL DE ASSALTO</span><b id="weapon-name">T-04</b></div><div class="ammo"><strong id="ammo-current">30</strong><span>/</span><b id="ammo-reserve">90</b></div><div class="ammo-caption">MUNIÇÃO <span>R RECARREGAR</span></div><div class="weapon-slots"><span id="slot-rifle" class="active">1 <b>T-04</b></span><span id="slot-pistol">2 <b>P-09</b></span></div></section>
+      <div class="damage-vignette" id="damage-vignette"></div><div id="reload-indicator" class="reload-indicator hidden">RECARREGANDO <span></span></div>
+      <div class="touch-controls" id="touch-controls"><div class="touch-move"><button data-key="w">▲</button><div><button data-key="a">◀</button><button data-key="s">▼</button><button data-key="d">▶</button></div></div><div class="touch-actions"><button id="touch-crouch">⌄</button><button id="touch-fire">FIRE</button></div></div>
+    </div>
+    <section class="screen" id="main-menu"><div class="menu-top"><div class="logo"><span class="logo-symbol">V</span><div>TACTICAL <b>FPS</b><small>CLASSIC FEEL / BUILD 0.2.4</small></div></div><div class="menu-top-right"><span><i class="online-dot"></i> SISTEMAS OPERACIONAIS</span><button class="icon-button" id="settings-open" title="Configurações">⚙</button></div></div><div class="menu-center"><div class="eyebrow"><span></span> OPERAÇÃO VÉRTICE <span> // </span> TREINAMENTO DE CAMPO</div><h1>COMPLEXO<br><em>FERRO</em></h1><p class="menu-copy">Uma falha de comunicação. Um pátio industrial abandonado.<br>Equipe, verifique o perímetro e mantenha-se em movimento.</p><div class="menu-actions"><button class="primary-button" id="play-button"><span>INICIAR OPERAÇÃO</span><b>↗</b></button><button class="secondary-button" id="training-button">CAMPO DE TREINAMENTO <span>01</span></button></div><div class="mode-switch"><span class="switch-label">MODO DE JOGO</span><button class="mode-card selected" data-mode="training"><i>◎</i><span><b>TREINAMENTO</b><small>6 alvos · munição ilimitada</small></span><u>●</u></button><button class="mode-card" data-mode="bots"><i>⌁</i><span><b>COMBATE COM BOTS</b><small>4 hostis · sobreviva à rodada</small></span><u>●</u></button></div></div><footer class="menu-footer"><div><span class="footer-mark">V</span> VÉRTICE TACTICAL GROUP <i>© 2006—2026</i></div><div><span>WASD MOVER</span><span>SHIFT CORRER</span><span>ESPAÇO SALTAR</span><span>BOTÃO ESQ. DISPARAR</span></div><div>BUILD 0.2.4 <b>·</b> LOCAL SESSION</div></footer><div class="menu-side-note">CLASSIC FEEL / LOW-POLY FIELD SIMULATION</div></section>
+    <section class="screen pause-screen hidden" id="pause-screen"><div class="pause-card"><span class="eyebrow">OPERAÇÃO VÉRTICE // PAUSA</span><h2>REAGRUPAR.</h2><p>O setor permanece ativo. Retome quando estiver pronto.</p><button class="primary-button" id="resume-button"><span>RETOMAR OPERAÇÃO</span><b>↗</b></button><button class="secondary-button" id="restart-button">REINICIAR SETOR</button><button class="text-button" id="menu-button">VOLTAR AO MENU</button><div class="pause-hint">ESC PARA RETOMAR <span>·</span> CLIQUE PARA CAPTURAR O MOUSE</div></div></section>
+    <section class="settings-modal hidden" id="settings-modal"><div class="settings-card"><button class="modal-close" id="settings-close">×</button><span class="eyebrow">SISTEMA // AJUSTES</span><h2>CONFIGURAÇÕES</h2><label>CAMPO DE VISÃO <b id="fov-value">80°</b><input id="fov-setting" type="range" min="65" max="100" value="80"></label><label>SENSIBILIDADE DO MOUSE <b id="sens-value">1.0×</b><input id="sens-setting" type="range" min="3" max="20" value="10"></label><label>QUALIDADE GRÁFICA <b id="quality-value">ALTA</b><select id="quality-setting"><option value="high">ALTA</option><option value="medium">MÉDIA</option><option value="low">BAIXA</option></select></label><div class="setting-note">As configurações são aplicadas imediatamente nesta sessão.</div></div></section>
+    <div id="loading" class="loading"><span class="loading-mark">V</span><b>CARREGANDO SETOR</b><i></i><small>INICIALIZANDO SIMULAÇÃO TÁTICA</small></div>
+    <div id="fatal" class="fatal hidden">Não foi possível iniciar o renderizador 3D. Verifique a conexão e recarregue a página.</div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
